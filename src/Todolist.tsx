@@ -1,57 +1,105 @@
-import React from "react";
-import {Button} from "./Button";
-import { FilterValuesType } from "./App";
+import React, { ChangeEvent, FC, useState, KeyboardEvent } from "react";
+import { Button } from "./Button";
+import { FiltervaluesType } from "./App";
 
 export type TaskType = {
-    id: number;
+    id: string;
     title: string;
     isDone: boolean;
 };
 
-type TodolistPropTypes = {
+type TodoListPropsType = {
     title: string;
     tasks: Array<TaskType>;
-    removeTask: (taskId: number) => void;
-    changeTodoListFilter: (filter: FilterValuesType) => void;
+    removeTask: (taskId: string) => void;
+    addTask: (title: string) => void;
+    // changeTododListFilter: (filter: FiltervaluesType) => void
 };
 
-const Todolist: React.FC<TodolistPropTypes> = ({ title, tasks, removeTask}) => {
+export const TodoList: FC<TodoListPropsType> = ({
+    title, // title: title
+    tasks, // task: task
+    removeTask, // removeTask: removeTask
+    addTask,
+    // changeTododListFilter
+}) => {
+    const [filter, setFilter] = useState<FiltervaluesType>("all");
+    const [taskTitle, setTaskTitle] = useState("");
+    const changeTododListFilter = (filter: FiltervaluesType) => {
+        setFilter(filter);
+    };
+    const addNewTaskTitleHandler = () => {
+        addTask(taskTitle)
+        setTaskTitle('')
+    }
+
+    const setTaskTitleHandler= (e: ChangeEvent<HTMLInputElement>) => setTaskTitle(e.currentTarget.value) 
+
+    const addTaskOnKeyDownHandler = (e: KeyboardEvent<HTMLInputElement>) => {if (e.key === 'Enter') addNewTaskTitleHandler()}
+
+    const changeFilterHandlerCreator = (filter: FiltervaluesType) => {
+        return () => changeTododListFilter(filter)
+    }
+
+    const tasksForTodoList: Array<TaskType> =
+        filter === "active"
+            ? tasks.filter((t) => !t.isDone)
+            : filter === "completed"
+            ? tasks.filter((t) => t.isDone)
+            : tasks;
+
     const tasksItems: JSX.Element =
-        tasks.length !== 0 ? (
+        tasksForTodoList.length !== 0 ? (
             <ul>
-                {tasks.map((task) => {
+                {tasksForTodoList.map((task) => {
+                    const removeTaskHandler =() => removeTask(task.id)
                     return (
                         <li key={task.id}>
                             <input type="checkbox" checked={task.isDone} />
                             <span>{task.title}</span>
-                            <button onClick={() => removeTask(task.id)}>x</button>
+                            <Button
+                                title="x"
+                                onClickHandler={removeTaskHandler}
+                            />
                         </li>
                     );
                 })}
             </ul>
         ) : (
-            <span> Давай, до свидания!</span>
+            <span>Давай, до свидания!</span>
         );
-
-    function changeTodoListFilter(arg0: string): void {
-        throw new Error("Function not implemented.");
-    }
 
     return (
         <div className="todolist">
             <h3>{title}</h3>
             <div>
-                <input />
-                <Button property="+" onClickHandler={() =>{}}/>
+                <input
+                    value={taskTitle}
+                    onChange={setTaskTitleHandler}
+                    onKeyDown={addTaskOnKeyDownHandler} // добавление по enter
+                />
+                <Button
+                    title="+"
+                    isDisabled={!taskTitle}
+                    onClickHandler={addNewTaskTitleHandler}
+                />
+                {taskTitle.length > 15 && <div style={{color:'red'}}>be more humble</div> }
             </div>
             {tasksItems}
             <div>
-                <Button property="All"  onClickHandler={() =>changeTodoListFilter('All')}/>
-                <Button property="Active" onClickHandler={() =>changeTodoListFilter('Active')}/>
-                <Button property="Completed" onClickHandler={() =>changeTodoListFilter('Completed')}/>
+                <Button
+                    title="All"
+                    onClickHandler={changeFilterHandlerCreator('all')}
+                />
+                <Button
+                    title="Active"
+                    onClickHandler={changeFilterHandlerCreator("active")}
+                />
+                <Button
+                    title="Completed"
+                    onClickHandler={changeFilterHandlerCreator  ("completed")}
+                />
             </div>
         </div>
     );
 };
-
-export default Todolist;

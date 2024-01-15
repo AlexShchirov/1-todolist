@@ -1,45 +1,46 @@
-import React, { useState } from "react";
-import "./App.css";
-import Todolist, { TaskType } from "./Todolist";
+import React, { useState } from 'react';
+import './App.css';
+import { TodoList, TaskType } from './Todolist';
+import { v1 } from 'uuid';
 
-export type FilterValuesType = 'all'| 'active' | 'complited'
+export type FiltervaluesType = "all" | "active" | "completed"
+
+
 function App() {
-    // console.log(crypto.randomUUID()) генерация уникальных id в браузере
-    const todoListTitle = "What to learn";
+    //CRUD
+    const todoListTitle = "What to learn"
+    const [tasks, setTasks] = React.useState<Array<TaskType>>([
+        { id: v1(), title: "HTML", isDone: false },
+        { id: v1(), title: "CSS", isDone: false },
+        { id: v1(), title: "JS/TS", isDone: true },
+        { id: v1(), title: "REACT", isDone: true },
+    ])
 
-    const [tasks, setTasks] = useState<Array<TaskType>>([
-        { id: 1, title: "HTML", isDone: false },
-        { id: 2, title: "CSS", isDone: false },
-        { id: 3, title: "JS/TS", isDone: true },
-        { id: 4, title: "React", isDone: true },
-    ]);
-    const removeTask = (taskId: number) => {
-        const nextState: Array<TaskType> = tasks.filter(
-            (task) => task.id !== taskId);
-            // nextState !== tasks => new array
-        setTasks(nextState);
-    };
-
-    
-    const [filter, setFilter] = useState<FilterValuesType>('all')
-
-    
-    const changeTodoListFilter = (filter: FilterValuesType) => {
-        setFilter(filter)
+    const removeTask = (taskId: string) => {
+        const nextState: Array<TaskType> = tasks.filter(task => task.id !== taskId)
+        setTasks(nextState)
     }
-    const tasksForTodoList: Array<TaskType> = filter === 'active'
-        ? tasks.filter(t => t.isDone === false)
-        :filter === 'complited'
-            ? tasks.filter(t => t.isDone === true)
-            : tasks
+    
+    //Добавляет новые таски
+    const addTask = (title: string) => {
+        const newTask: TaskType = { 
+            id: v1(),
+            title, // title: title
+            isDone: false,
+        } 
+        const nextState: Array<TaskType> = [newTask, ...tasks]
+        setTasks(nextState)
+    }
+    
 
     return (
         <div className="App">
-            <Todolist
+            <TodoList
                 title={todoListTitle}
-                tasks={tasksForTodoList}
+                tasks={tasks}
+                addTask={addTask}
                 removeTask={removeTask}
-                changeTodoListFilter={changeTodoListFilter}
+                // changeTododListFilter={changeTododListFilter}
             />
         </div>
     );
