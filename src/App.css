@@ -12,3 +12,28 @@
   background-color: rosybrown;
   padding: 20px;
 }
+
+.task {
+  font-weight: bold;
+
+}
+.task-done{
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+.btn-filter-active {
+  background-color: #00ff40;
+  border: 2px solid #00ff40;
+  border-radius: 3px;
+  font-weight: bold;
+}
+
+.btns-filter-block{
+  display: flex;
+  gap: 6px;
+}
+
+.task-input-error{
+  border: 2px solid red;
+  outline: none;
+}

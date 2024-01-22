@@ -1,37 +1,44 @@
-import React, { useState } from 'react';
-import './App.css';
-import { TodoList, TaskType } from './Todolist';
-import { v1 } from 'uuid';
+import React, { useState } from "react";
+import "./App.css";
+import { TodoList, TaskType } from "./Todolist";
+import { v1 } from "uuid";
 
-export type FiltervaluesType = "all" | "active" | "completed"
-
+export type FiltervaluesType = "all" | "active" | "completed";
 
 function App() {
     //CRUD
-    const todoListTitle = "What to learn"
+    const todoListTitle = "What to learn";
     const [tasks, setTasks] = React.useState<Array<TaskType>>([
         { id: v1(), title: "HTML", isDone: false },
         { id: v1(), title: "CSS", isDone: false },
         { id: v1(), title: "JS/TS", isDone: true },
         { id: v1(), title: "REACT", isDone: true },
-    ])
+    ]);
 
     const removeTask = (taskId: string) => {
-        const nextState: Array<TaskType> = tasks.filter(task => task.id !== taskId)
-        setTasks(nextState)
-    }
-    
+        const nextState: Array<TaskType> = tasks.filter(
+            (task) => task.id !== taskId
+        );
+        setTasks(nextState);
+    };
+
     //Добавляет новые таски
     const addTask = (title: string) => {
-        const newTask: TaskType = { 
+        const newTask: TaskType = {
             id: v1(),
             title, // title: title
             isDone: false,
-        } 
-        const nextState: Array<TaskType> = [newTask, ...tasks]
-        setTasks(nextState)
-    }
-    
+        };
+        const nextState: Array<TaskType> = [newTask, ...tasks];
+        setTasks(nextState);
+    };
+
+    const changeTaskStatus = (taskId: string, isDone: boolean) => {
+        const nextState: Array<TaskType> = tasks.map((task) =>
+            task.id === taskId ? { ...task, isDone } : task
+        );
+        setTasks(nextState);
+    };
 
     return (
         <div className="App">
@@ -40,6 +47,7 @@ function App() {
                 tasks={tasks}
                 addTask={addTask}
                 removeTask={removeTask}
+                changeTaskStatus={changeTaskStatus}
                 // changeTododListFilter={changeTododListFilter}
             />
         </div>
