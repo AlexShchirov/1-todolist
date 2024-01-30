@@ -1,3 +1,4 @@
+
 .App {
   padding: 30px;
   display: flex;
@@ -6,34 +7,20 @@
 .App > div {
   margin-right: 50px;
 }
-.todolist {
-  border: 1px solid black;
-  border-radius: 5px;
-  background-color: rosybrown;
-  padding: 20px;
+
+.error {
+  border: red 1px solid;
 }
 
-.task {
-  font-weight: bold;
-
+.error-message {
+  color: red;
 }
-.task-done{
-  text-decoration: line-through;
+
+.active-filter {
+  background-color: aquamarine;
+}
+
+.is-done {
   opacity: 0.5;
 }
-.btn-filter-active {
-  background-color: #00ff40;
-  border: 2px solid #00ff40;
-  border-radius: 3px;
-  font-weight: bold;
-}
 
-.btns-filter-block{
-  display: flex;
-  gap: 6px;
-}
-
-.task-input-error{
-  border: 2px solid red;
-  outline: none;
-}
