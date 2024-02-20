@@ -1,21 +1,24 @@
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 import React, { ChangeEvent, KeyboardEvent, useState } from "react";
 
-type AddItemFormProps = {
-    callBack: (newTitle: string) => void;
+type AddItemFormPropsType = {
+    addItem: (title: string) => void;
 };
 
-export const AddItemForm = (props: AddItemFormProps) => {
+export function AddItemForm(props: AddItemFormPropsType) {
     let [title, setTitle] = useState("");
     let [error, setError] = useState<string | null>(null);
-    const addTask = () => {
-        let newTitle = title.trim();
-        if (newTitle !== "") {
-            props.callBack(newTitle);
+
+    const addItem = () => {
+        if (title.trim() !== "") {
+            props.addItem(title);
             setTitle("");
         } else {
             setError("Title is required");
         }
     };
+
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setTitle(e.currentTarget.value);
     };
@@ -23,20 +26,45 @@ export const AddItemForm = (props: AddItemFormProps) => {
     const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
         setError(null);
         if (e.charCode === 13) {
-            addTask();
+            addItem();
         }
+    };
+
+    const styles = {
+        maxWidth: "40px",
+        maxHeight: "40px",
+        minWidth: "40px",
+        minHeight: "40px",
     };
 
     return (
         <div>
-            <input
+            {/* <input
+                value={title}
+                onChange={onChangeHandler}
+                onKeyPress={onKeyPressHandler}
+                className={error ? "error" : ""}
+            /> */}
+            <TextField
+                error={!!error}
+                id="outlined-basic"
+                size="small"
+                label={error ? error : 'write smth...'}
+                variant="outlined"
                 value={title}
                 onChange={onChangeHandler}
                 onKeyPress={onKeyPressHandler}
                 className={error ? "error" : ""}
             />
-            <button onClick={addTask}>+</button>
+            <Button
+                size="small"
+                variant="contained"
+                sx={styles}
+                onClick={addItem}
+            >
+                +
+            </Button>
             {error && <div className="error-message">{error}</div>}
         </div>
     );
-};
+}
